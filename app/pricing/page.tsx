@@ -32,8 +32,9 @@ const TIERS = [
       "All presets",
       "Save custom presets",
     ],
-    cta: "Notify me",
+    cta: "Coming soon",
     href: "#",
+    disabled: true,
     highlight: true,
   },
   {
@@ -48,8 +49,9 @@ const TIERS = [
       "Team templates",
       "Commercial license",
     ],
-    cta: "Notify me",
+    cta: "Coming soon",
     href: "#",
+    disabled: true,
   },
 ];
 
@@ -106,12 +108,23 @@ export default function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <Link
-                href={t.href}
-                className={t.highlight ? "btn-primary mt-6" : "btn-ghost mt-6"}
-              >
-                {t.cta}
-              </Link>
+              {t.disabled ? (
+                <button
+                  type="button"
+                  disabled
+                  aria-disabled="true"
+                  className="mt-6 inline-flex items-center justify-center gap-2 rounded-md border border-bg-border text-text-faint px-4 py-2 cursor-not-allowed"
+                >
+                  {t.cta}
+                </button>
+              ) : (
+                <Link
+                  href={t.href}
+                  className={t.highlight ? "btn-primary mt-6" : "btn-ghost mt-6"}
+                >
+                  {t.cta}
+                </Link>
+              )}
             </div>
           ))}
         </div>

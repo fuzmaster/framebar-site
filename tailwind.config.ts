@@ -20,9 +20,9 @@ const config: Config = {
           dim: "#0d9488",
         },
         text: {
-          DEFAULT: "#e6edf3",
-          dim: "#9aa6b2",
-          faint: "#5e6b78",
+          DEFAULT: "#e6edf3", // ~17:1 contrast on bg-base (AAA)
+          dim: "#9aa6b2",     // ~8:1  contrast on bg-base (AAA)
+          faint: "#8693a4",   // ~6.5:1 contrast on bg-base (AA — was #5e6b78, ~3.6:1, failing)
         },
       },
       fontFamily: {

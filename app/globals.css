@@ -29,7 +29,20 @@ body {
 }
 
 .input-base {
-  @apply w-full rounded-md bg-bg-raised border border-bg-border px-3 py-2 text-sm text-text outline-none focus:border-accent transition-colors;
+  @apply w-full rounded-md bg-bg-raised border border-bg-border px-3 py-2 text-sm text-text outline-none focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/40 transition-colors;
+}
+
+/* Global visible focus for keyboard users (WCAG 2.4.7) */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+select:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="range"]:focus-visible,
+input[type="color"]:focus-visible {
+  outline: 2px solid #5eead4;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .label-base {

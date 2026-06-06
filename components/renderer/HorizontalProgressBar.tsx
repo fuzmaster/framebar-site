@@ -1,4 +1,5 @@
 import type { HorizontalBarSettings } from "@/types/editor";
+import { computeBarLayout } from "@/lib/render/barLayout";
 
 type Props = {
   settings: HorizontalBarSettings;
@@ -7,49 +8,11 @@ type Props = {
   height: number;
 };
 
-function hexToRgba(hex: string, alpha: number): string {
-  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.trim());
-  if (!m) return hex;
-  const r = parseInt(m[1], 16);
-  const g = parseInt(m[2], 16);
-  const b = parseInt(m[3], 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
 export function HorizontalProgressBar({ settings, progress, width, height }: Props) {
-  const {
-    position,
-    widthPercent,
-    thickness,
-    marginX,
-    marginY,
-    radius,
-    fillColor,
-    trackColor,
-    fillOpacity,
-    trackOpacity,
-    glowEnabled,
-    glowColor,
-    shadowEnabled,
-    gradientEnabled,
-    gradientFrom,
-    gradientTo,
-    direction,
-  } = settings;
+  const layout = computeBarLayout(settings, progress, width, height);
+  const { x, y, barWidth, fillWidth, fillX, thickness, radius, trackFill, fillFill, glow, shadow, gradient } = layout;
 
-  const barWidth = Math.max(0, (width * widthPercent) / 100);
-  const x = (width - barWidth) / 2;
-
-  let y: number;
-  if (position === "top") y = marginY;
-  else if (position === "bottom") y = height - marginY - thickness;
-  else y = Math.max(0, Math.min(height - thickness, marginY));
-
-  const fillWidth = barWidth * Math.min(1, Math.max(0, progress));
-  const fillX = direction === "right-to-left" ? x + barWidth - fillWidth : x;
-
-  const fillPaint = gradientEnabled ? "url(#fb-fill-gradient)" : hexToRgba(fillColor, fillOpacity);
-  const trackPaint = hexToRgba(trackColor, trackOpacity);
+  const fillPaint = gradient.enabled ? "url(#fb-fill-gradient)" : fillFill;
 
   return (
     <svg
@@ -59,21 +22,21 @@ export function HorizontalProgressBar({ settings, progress, width, height }: Pro
       style={{ display: "block" }}
     >
       <defs>
-        {gradientEnabled && (
+        {gradient.enabled && (
           <linearGradient
             id="fb-fill-gradient"
-            x1={direction === "right-to-left" ? "100%" : "0%"}
-            x2={direction === "right-to-left" ? "0%" : "100%"}
+            x1={gradient.x1}
+            x2={gradient.x2}
             y1="0%"
             y2="0%"
           >
-            <stop offset="0%" stopColor={gradientFrom} stopOpacity={fillOpacity} />
-            <stop offset="100%" stopColor={gradientTo} stopOpacity={fillOpacity} />
+            <stop offset="0%" stopColor={gradient.from} stopOpacity={gradient.opacity} />
+            <stop offset="100%" stopColor={gradient.to} stopOpacity={gradient.opacity} />
           </linearGradient>
         )}
-        {glowEnabled && (
+        {glow.enabled && (
           <filter id="fb-glow" x="-50%" y="-200%" width="200%" height="500%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation={Math.max(2, thickness * 0.6)} />
+            <feGaussianBlur in="SourceGraphic" stdDeviation={glow.stdDeviation} />
             <feMerge>
               <feMergeNode />
               <feMergeNode in="SourceGraphic" />
@@ -89,24 +52,21 @@ export function HorizontalProgressBar({ settings, progress, width, height }: Pro
         height={thickness}
         rx={radius}
         ry={radius}
-        fill={trackPaint}
+        fill={trackFill}
       />
 
       {fillWidth > 0 && (
         <g
-          filter={glowEnabled ? "url(#fb-glow)" : undefined}
+          filter={glow.enabled ? "url(#fb-glow)" : undefined}
           style={
-            shadowEnabled
+            shadow.enabled
               ? {
-                  filter: `drop-shadow(0 ${Math.max(2, thickness * 0.4)}px ${Math.max(
-                    4,
-                    thickness * 0.8
-                  )}px rgba(0,0,0,0.45))`,
+                  filter: `drop-shadow(0 ${shadow.dy}px ${shadow.blur}px rgba(0,0,0,0.45))`,
                 }
               : undefined
           }
         >
-          {glowEnabled && (
+          {glow.enabled && (
             <rect
               x={fillX}
               y={y}
@@ -114,7 +74,7 @@ export function HorizontalProgressBar({ settings, progress, width, height }: Pro
               height={thickness}
               rx={radius}
               ry={radius}
-              fill={hexToRgba(glowColor, 0.6)}
+              fill={glow.color}
               opacity={0.7}
             />
           )}

@@ -8,24 +8,7 @@ export const EXPORT_FORMATS: ExportFormat[] = [
     transparency: "full",
     status: "recommended",
     description:
-      "Frame-by-frame transparent PNG files. Predictable, editor-friendly, and reliable for alpha.",
-  },
-  {
-    id: "webm-alpha",
-    name: "WebM Alpha",
-    bestFor: ["Web", "Premiere Pro", "DaVinci Resolve"],
-    transparency: "full",
-    status: "prototype",
-    description: "Small single-file transparent video. Compatibility varies by editor.",
-  },
-  {
-    id: "remotion-component",
-    name: "Remotion Component",
-    bestFor: ["Developers", "Custom pipelines"],
-    transparency: "full",
-    status: "prototype",
-    description:
-      "Exports a typed React/Remotion composition you can drop into your own render pipeline.",
+      "Frame-by-frame transparent PNG files in a zip. Predictable, editor-friendly, and reliable for alpha. Renders in your browser — no upload.",
   },
   {
     id: "settings-json",
@@ -35,6 +18,24 @@ export const EXPORT_FORMATS: ExportFormat[] = [
     status: "recommended",
     description:
       "Plain JSON of your duration, FPS, resolution, and bar settings. Easy to share or re-import.",
+  },
+  {
+    id: "webm-alpha",
+    name: "WebM Alpha",
+    bestFor: ["Web", "Premiere Pro", "DaVinci Resolve"],
+    transparency: "full",
+    status: "prototype",
+    description:
+      "Small single-file transparent video. Beta — render pipeline not wired yet.",
+  },
+  {
+    id: "remotion-component",
+    name: "Remotion Component",
+    bestFor: ["Developers", "Custom pipelines"],
+    transparency: "full",
+    status: "prototype",
+    description:
+      "Exports a typed React/Remotion composition for your own render pipeline. Beta — not wired yet.",
   },
 ];
 

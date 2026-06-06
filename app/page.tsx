@@ -164,6 +164,50 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section className="px-6 pb-24 max-w-3xl mx-auto">
+          <h2 className="text-2xl font-semibold tracking-tight text-center">FAQ</h2>
+          <div className="mt-8 space-y-3">
+            {[
+              {
+                q: "Do I need to upload my video?",
+                a: "No. FrameBar generates the overlay from specs alone — duration, FPS, aspect ratio, resolution. Your footage never touches a server. All rendering happens in your browser.",
+              },
+              {
+                q: "Is it really frame-accurate?",
+                a: "Yes. The first frame renders at 0% and the final frame at exactly 100%. Decimal frame rates (23.976, 29.97, 59.94) are supported.",
+              },
+              {
+                q: "Which editors does it work with?",
+                a: "Premiere Pro, DaVinci Resolve, Final Cut Pro, CapCut, and After Effects. Each format card shows recommendations for your selected editor.",
+              },
+              {
+                q: "What export formats work today?",
+                a: "PNG sequence and Settings JSON. WebM Alpha and Remotion Component are in beta and not yet wired to a real render pipeline.",
+              },
+              {
+                q: "How big are PNG sequence exports?",
+                a: "Depends on duration, FPS, and resolution. A 10-second clip at 30 fps × 1080×1920 produces 300 PNG frames, typically a 20–60 MB zip. Long high-FPS exports can be large; consider exporting shorter clips first.",
+              },
+              {
+                q: "Is FrameBar free?",
+                a: "During MVP, yes. Pro and Studio plans are described on the pricing page for direction but are not active. Payments are not live.",
+              },
+              {
+                q: "Do you collect any data?",
+                a: "No. There are no analytics scripts, no cookies, no account system, and no backend. See the privacy page for the full statement.",
+              },
+            ].map((item) => (
+              <details key={item.q} className="panel p-4 group">
+                <summary className="cursor-pointer flex items-center justify-between font-medium list-none">
+                  <span>{item.q}</span>
+                  <span className="text-accent group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p className="text-sm text-text-dim mt-3">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
         <section className="px-6 pb-24 max-w-3xl mx-auto text-center">
           <h2 className="text-2xl font-semibold tracking-tight">
             Stop hand-animating progress bars.
