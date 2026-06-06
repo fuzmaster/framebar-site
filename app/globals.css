@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #0b0d10;
+  color: #e6edf3;
+}
+
+body {
+  font-feature-settings: "ss01", "cv11";
+  min-height: 100vh;
+}
+
+.checkerboard {
+  background-color: #2a2f36;
+  background-image:
+    linear-gradient(45deg, #1c2026 25%, transparent 25%),
+    linear-gradient(-45deg, #1c2026 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #1c2026 75%),
+    linear-gradient(-45deg, transparent 75%, #1c2026 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+
+.input-base {
+  @apply w-full rounded-md bg-bg-raised border border-bg-border px-3 py-2 text-sm text-text outline-none focus:border-accent transition-colors;
+}
+
+.label-base {
+  @apply text-xs uppercase tracking-wide text-text-dim;
+}
+
+.panel {
+  @apply bg-bg-panel border border-bg-border rounded-lg;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-md bg-accent text-bg-base font-medium px-4 py-2 hover:bg-accent-muted transition-colors disabled:opacity-50;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-md border border-bg-border text-text px-4 py-2 hover:border-accent hover:text-accent transition-colors;
+}
+
+.btn-icon {
+  @apply inline-flex h-9 w-9 items-center justify-center rounded-md border border-bg-border text-text hover:border-accent hover:text-accent transition-colors;
+}

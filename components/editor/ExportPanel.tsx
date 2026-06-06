@@ -1,0 +1,152 @@
+"use client";
+
+import { Download, FileJson, FileVideo, Image as ImageIcon, Component } from "lucide-react";
+import { useEditorStore, selectTotalFrames } from "@/store/editorStore";
+import { EXPORT_FORMATS, recommendedFormatsFor } from "@/lib/exportFormats";
+import { formatFrameCount } from "@/lib/timing";
+import { useMemo, useState } from "react";
+import type { ExportFormatId } from "@/types/editor";
+
+const ICONS: Record<ExportFormatId, JSX.Element> = {
+  "png-sequence": <ImageIcon size={16} />,
+  "webm-alpha": <FileVideo size={16} />,
+  "remotion-component": <Component size={16} />,
+  "settings-json": <FileJson size={16} />,
+};
+
+function estimatePngSize(width: number, height: number, frames: number): string {
+  const bytesPerFrame = width * height * 0.5;
+  const total = bytesPerFrame * frames;
+  return formatBytes(total);
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`;
+  if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`;
+  return `${(bytes / 1024 ** 3).toFixed(2)} GB`;
+}
+
+export function ExportPanel() {
+  const {
+    width,
+    height,
+    fps,
+    durationSeconds,
+    editingSoftware,
+    barSettings,
+    aspectRatio,
+  } = useEditorStore();
+  const totalFrames = selectTotalFrames({ durationSeconds, fps });
+  const recommended = useMemo(
+    () => new Set(recommendedFormatsFor(editingSoftware)),
+    [editingSoftware]
+  );
+
+  const [selected, setSelected] = useState<ExportFormatId>("png-sequence");
+  const [lastAction, setLastAction] = useState<string>("");
+
+  const handleExport = () => {
+    if (selected === "settings-json") {
+      const payload = {
+        app: "FrameBar",
+        durationSeconds,
+        fps,
+        totalFrames,
+        width,
+        height,
+        aspectRatio,
+        editingSoftware,
+        bar: barSettings,
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "framebar-settings.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      setLastAction("Settings JSON downloaded.");
+      return;
+    }
+    setLastAction(
+      `${selected} export not wired yet — TODO: implement renderer pipeline (PNG/WebM/Remotion).`
+    );
+  };
+
+  return (
+    <div className="panel mt-3 p-3">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-sm font-semibold">Export</h2>
+          <p className="text-xs text-text-dim mt-0.5">
+            {width}×{height} · {fps} fps · {formatFrameCount(totalFrames)} frames · for{" "}
+            {editingSoftware}
+          </p>
+        </div>
+        <button onClick={handleExport} className="btn-primary">
+          <Download size={16} />
+          Export Overlay
+        </button>
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+        {EXPORT_FORMATS.map((f) => {
+          const isSelected = selected === f.id;
+          const isRecommended = recommended.has(f.id);
+          return (
+            <button
+              key={f.id}
+              onClick={() => setSelected(f.id)}
+              className={[
+                "text-left rounded-md border p-3 transition-colors",
+                isSelected
+                  ? "border-accent bg-bg-raised"
+                  : "border-bg-border hover:border-accent/60 bg-bg-raised/40",
+              ].join(" ")}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  {ICONS[f.id]}
+                  {f.name}
+                </div>
+                <span
+                  className={[
+                    "text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded",
+                    f.status === "recommended"
+                      ? "bg-accent/20 text-accent"
+                      : f.status === "prototype"
+                      ? "bg-amber-500/15 text-amber-300"
+                      : "bg-bg-border text-text-dim",
+                  ].join(" ")}
+                >
+                  {f.status === "available-soon" ? "Soon" : f.status}
+                </span>
+              </div>
+              <p className="text-xs text-text-dim mt-1 line-clamp-2">{f.description}</p>
+              <div className="text-[11px] text-text-faint mt-2">
+                Best for: {f.bestFor.join(", ")}
+              </div>
+              {isRecommended && (
+                <div className="text-[11px] text-accent mt-1">Recommended for {editingSoftware}</div>
+              )}
+              {f.id === "png-sequence" && (
+                <div className="text-[11px] text-text-faint mt-1 font-mono">
+                  ~{estimatePngSize(width, height, totalFrames)}
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {lastAction && (
+        <div className="mt-3 text-xs text-text-dim border-t border-bg-border pt-2">
+          {lastAction}
+        </div>
+      )}
+    </div>
+  );
+}
