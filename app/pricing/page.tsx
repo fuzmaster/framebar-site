@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { BackLinkFooter } from "@/components/site/BackLinkFooter";
 
 const TIERS = [
   {
@@ -52,7 +53,12 @@ const TIERS = [
   },
 ];
 
-export const metadata = { title: "FrameBar — Pricing" };
+export const metadata = {
+  title: "Pricing",
+  description:
+    "FrameBar pricing — free during MVP. Pro and Studio tiers for no watermark, 4K export, MOV alpha, batch renders, brand kits, and commercial license.",
+  alternates: { canonical: "/pricing" },
+};
 
 export default function PricingPage() {
   return (
@@ -110,6 +116,7 @@ export default function PricingPage() {
           ))}
         </div>
       </main>
+      <BackLinkFooter />
     </div>
   );
 }

@@ -1,9 +1,48 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowRight, Layers, Sparkles, Wand2 } from "lucide-react";
+import { BackLinkFooter } from "@/components/site/BackLinkFooter";
+import { AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: SITE_NAME,
+  url: SITE_URL,
+  applicationCategory: "MultimediaApplication",
+  operatingSystem: "Web",
+  description: SITE_DESCRIPTION,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  author: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    url: AUTHOR.url,
+  },
+};
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-bg-base text-text">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="flex items-center justify-between px-6 py-4 border-b border-bg-border">
         <Link href="/" className="flex items-center gap-2">
           <div className="h-7 w-7 rounded bg-accent grid place-items-center text-bg-base font-bold">
@@ -141,13 +180,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="border-t border-bg-border px-6 py-6 text-sm text-text-dim flex items-center justify-between">
-        <div>FrameBar · Frame-accurate progress overlays</div>
-        <div className="flex gap-4">
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/help/formats">Formats</Link>
-        </div>
-      </footer>
+      <BackLinkFooter />
     </div>
   );
 }

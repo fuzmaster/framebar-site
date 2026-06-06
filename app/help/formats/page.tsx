@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { EXPORT_FORMATS } from "@/lib/exportFormats";
+import { BackLinkFooter } from "@/components/site/BackLinkFooter";
 
-export const metadata = { title: "FrameBar — Export Formats" };
+export const metadata = {
+  title: "Export Formats",
+  description:
+    "Pick the right transparent progress overlay export for Premiere Pro, DaVinci Resolve, Final Cut Pro, CapCut, or After Effects. PNG sequence, WebM alpha, Remotion component, and Settings JSON.",
+  alternates: { canonical: "/help/formats" },
+};
 
 const SOFTWARE = [
   {
@@ -102,6 +108,7 @@ export default function FormatsPage() {
           </ul>
         </section>
       </main>
+      <BackLinkFooter />
     </div>
   );
 }
