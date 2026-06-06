@@ -16,6 +16,8 @@ export function SafeZoneOverlay({ id, width, height }: Props) {
       height={height}
       viewBox={`0 0 ${width} ${height}`}
       style={{ pointerEvents: "none", display: "block" }}
+      role="presentation"
+      aria-hidden="true"
     >
       {zone.rects.map((r, i) => (
         <g key={i}>

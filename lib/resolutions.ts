@@ -31,7 +31,10 @@ export const RESOLUTION_PRESETS: ResolutionPreset[] = [
   { id: "3840x2160", label: "3840×2160", width: 3840, height: 2160 },
 ];
 
-export const FPS_PRESETS: { label: string; value: number }[] = [
+export const FPS_PRESETS: { label: string; value: number; group?: "test" | "broadcast" }[] = [
+  { label: "5 (test)", value: 5, group: "test" },
+  { label: "10 (test)", value: 10, group: "test" },
+  { label: "15 (test)", value: 15, group: "test" },
   { label: "23.976", value: 23.976 },
   { label: "24", value: 24 },
   { label: "25", value: 25 },

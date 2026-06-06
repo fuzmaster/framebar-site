@@ -30,12 +30,13 @@ export function PresetPanel() {
             >
               <div className="text-sm font-medium">{p.name}</div>
               <div className="text-xs text-text-dim mt-0.5 line-clamp-2">{p.description}</div>
-              <div className="mt-2 h-8 rounded bg-black/40 overflow-hidden">
+              <div className="mt-2 h-8 rounded bg-black/40 overflow-hidden" aria-hidden="true">
                 <HorizontalProgressBar
                   settings={p.bar}
                   progress={0.6}
                   width={200}
                   height={32}
+                  decorative
                 />
               </div>
             </button>

@@ -114,6 +114,7 @@ function Toggle({
 export function ControlsPanel() {
   const {
     durationInput,
+    durationSeconds,
     fps,
     width,
     height,
@@ -136,6 +137,9 @@ export function ControlsPanel() {
     setSafeZoneId,
   } = useEditorStore();
 
+  const trimmedDuration = durationInput.trim();
+  const durationParseFailed = trimmedDuration !== "" && durationSeconds === 0;
+
   return (
     <aside className="panel w-80 shrink-0 flex flex-col overflow-y-auto">
       <div className="px-4 py-3 border-b border-bg-border">
@@ -149,9 +153,23 @@ export function ControlsPanel() {
             type="text"
             value={durationInput}
             onChange={(e) => setDurationInput(e.target.value)}
-            className="input-base"
+            className={[
+              "input-base",
+              durationParseFailed ? "border-amber-400/60 focus-visible:border-amber-400" : "",
+            ].join(" ")}
             placeholder="00:47"
+            aria-invalid={durationParseFailed}
+            aria-describedby={durationParseFailed ? "duration-error" : undefined}
           />
+          {durationParseFailed ? (
+            <p id="duration-error" role="alert" className="text-xs text-amber-300 mt-1">
+              Couldn&apos;t read that. Try a number of seconds, mm:ss, or hh:mm:ss.
+            </p>
+          ) : (
+            <p className="text-xs text-text-faint mt-1">
+              Examples: 47 · 47.5 · 1:12 · 00:01:12
+            </p>
+          )}
         </Row>
 
         <Row label="FPS">

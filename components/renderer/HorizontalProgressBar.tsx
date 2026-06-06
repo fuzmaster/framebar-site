@@ -6,13 +6,25 @@ type Props = {
   progress: number;
   width: number;
   height: number;
+  /** Pass `decorative` for thumbnails / static previews; the SVG will be hidden from AT. */
+  decorative?: boolean;
+  ariaLabel?: string;
 };
 
-export function HorizontalProgressBar({ settings, progress, width, height }: Props) {
+export function HorizontalProgressBar({
+  settings,
+  progress,
+  width,
+  height,
+  decorative = false,
+  ariaLabel,
+}: Props) {
   const layout = computeBarLayout(settings, progress, width, height);
   const { x, y, barWidth, fillWidth, fillX, thickness, radius, trackFill, fillFill, glow, shadow, gradient } = layout;
 
   const fillPaint = gradient.enabled ? "url(#fb-fill-gradient)" : fillFill;
+  const pct = Math.round(Math.min(1, Math.max(0, progress)) * 100);
+  const label = ariaLabel ?? `Progress bar at ${pct}%`;
 
   return (
     <svg
@@ -20,7 +32,11 @@ export function HorizontalProgressBar({ settings, progress, width, height }: Pro
       height={height}
       viewBox={`0 0 ${width} ${height}`}
       style={{ display: "block" }}
+      role={decorative ? "presentation" : "img"}
+      aria-hidden={decorative ? true : undefined}
+      aria-label={decorative ? undefined : label}
     >
+      {!decorative && <title>{label}</title>}
       <defs>
         {gradient.enabled && (
           <linearGradient

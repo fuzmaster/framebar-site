@@ -14,3 +14,8 @@ export const AUTHOR = {
   url: "https://jacobbritten.com",
   role: "Media Systems Architect",
 };
+
+// Set this once you provision the address (e.g. hi@framebar.app).
+// Used by the Contact page and any feedback links. Leave null to hide the
+// mailto button and fall back to GitHub-only contact.
+export const CONTACT_EMAIL: string | null = "hi@framebar.app";

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useEditorStore, selectTotalFrames } from "@/store/editorStore";
 import { ProgressOverlay } from "@/components/renderer/ProgressOverlay";
 import { SafeZoneOverlay } from "./SafeZoneOverlay";
+import { getProgressForFrame } from "@/lib/timing";
 
 export function PreviewCanvas() {
   const width = useEditorStore((s) => s.width);
@@ -79,10 +80,14 @@ export function PreviewCanvas() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, fps, totalFrames]);
 
+  const progressPct = Math.round(getProgressForFrame(currentFrame, totalFrames) * 100);
+
   return (
     <div
       ref={containerRef}
       className="relative flex-1 flex items-center justify-center overflow-hidden p-6"
+      role="region"
+      aria-label={`Preview canvas — frame ${currentFrame} of ${Math.max(0, totalFrames - 1)} at ${progressPct} percent`}
     >
       {width > 0 && height > 0 && scale > 0 && (
         <div

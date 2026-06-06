@@ -142,14 +142,9 @@ export function ExportPanel() {
         return downloadSettingsJson();
       case "png-sequence":
         return exportPngSequence();
-      case "webm-alpha":
-        return setLastAction(
-          "WebM Alpha export is in beta — not wired yet. Use PNG Sequence for now."
-        );
-      case "remotion-component":
-        return setLastAction(
-          "Remotion Component export is in beta — not wired yet. Use PNG Sequence for now."
-        );
+      default:
+        // WebM/Remotion are not selectable in the UI; nothing to do.
+        return;
     }
   };
 
@@ -211,17 +206,24 @@ export function ExportPanel() {
         {EXPORT_FORMATS.map((f) => {
           const isSelected = selected === f.id;
           const isRecommended = recommended.has(f.id);
+          const isComingSoon = f.status === "prototype" || f.status === "available-soon";
+          const disabled = busy || isComingSoon;
           return (
             <button
               key={f.id}
-              onClick={() => setSelected(f.id)}
-              disabled={busy}
+              onClick={() => !isComingSoon && setSelected(f.id)}
+              disabled={disabled}
+              aria-disabled={disabled}
+              aria-pressed={isSelected}
+              title={isComingSoon ? `${f.name} — coming soon` : `Select ${f.name}`}
               className={[
                 "text-left rounded-md border p-3 transition-colors",
                 isSelected
                   ? "border-accent bg-bg-raised"
+                  : isComingSoon
+                  ? "border-bg-border bg-bg-raised/20 opacity-60 cursor-not-allowed"
                   : "border-bg-border hover:border-accent/60 bg-bg-raised/40",
-                busy ? "opacity-60 cursor-not-allowed" : "",
+                busy && !isComingSoon ? "opacity-60 cursor-not-allowed" : "",
               ].join(" ")}
             >
               <div className="flex items-center justify-between">
@@ -232,25 +234,19 @@ export function ExportPanel() {
                 <span
                   className={[
                     "text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded",
-                    f.status === "recommended"
-                      ? "bg-accent/20 text-accent"
-                      : f.status === "prototype"
-                      ? "bg-amber-500/15 text-amber-300"
-                      : "bg-bg-border text-text-dim",
+                    isComingSoon
+                      ? "bg-bg-border text-text-dim"
+                      : "bg-accent/20 text-accent",
                   ].join(" ")}
                 >
-                  {f.status === "available-soon"
-                    ? "Soon"
-                    : f.status === "prototype"
-                    ? "Beta"
-                    : "Available"}
+                  {isComingSoon ? "Coming soon" : "Available"}
                 </span>
               </div>
               <p className="text-xs text-text-dim mt-1 line-clamp-2">{f.description}</p>
               <div className="text-[11px] text-text-faint mt-2">
                 Best for: {f.bestFor.join(", ")}
               </div>
-              {isRecommended && (
+              {isRecommended && !isComingSoon && (
                 <div className="text-[11px] text-accent mt-1">Recommended for {editingSoftware}</div>
               )}
               {f.id === "png-sequence" && (

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Mail } from "lucide-react";
 import { MarketingHeader } from "@/components/site/MarketingHeader";
 import { BackLinkFooter } from "@/components/site/BackLinkFooter";
-import { AUTHOR } from "@/lib/site";
+import { AUTHOR, CONTACT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -11,6 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const mailHref = CONTACT_EMAIL
+    ? `mailto:${CONTACT_EMAIL}?subject=FrameBar%20feedback`
+    : null;
+
   return (
     <div className="min-h-screen bg-bg-base text-text">
       <MarketingHeader />
@@ -18,39 +23,55 @@ export default function ContactPage() {
         <h1 className="text-4xl font-semibold tracking-tight">Contact</h1>
         <p className="text-text-dim mt-3">
           FrameBar is built by {AUTHOR.name}. For bug reports, feature requests, partnerships, or
-          press, reach out via:
+          press, the fastest paths are:
         </p>
 
         <div className="mt-10 grid md:grid-cols-2 gap-4">
-          <div className="panel p-5">
-            <h2 className="font-semibold">Portfolio</h2>
+          {mailHref && (
             <a
-              href={AUTHOR.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent hover:underline text-sm mt-2 inline-block"
+              href={mailHref}
+              className="panel p-5 hover:border-accent transition-colors block"
             >
-              {AUTHOR.url.replace("https://", "")}
+              <div className="flex items-center gap-2">
+                <Mail size={16} className="text-accent" />
+                <h2 className="font-semibold">Email</h2>
+              </div>
+              <span className="text-accent text-sm mt-2 inline-block">{CONTACT_EMAIL}</span>
+              <p className="text-xs text-text-faint mt-2">Best for bugs, feedback, and press.</p>
             </a>
-          </div>
-          <div className="panel p-5">
-            <h2 className="font-semibold">GitHub</h2>
-            <a
-              href="https://github.com/fuzmaster/framebar-site"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent hover:underline text-sm mt-2 inline-block"
-            >
-              github.com/fuzmaster/framebar-site
-            </a>
+          )}
+
+          <a
+            href="https://github.com/fuzmaster/framebar-site/issues/new"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="panel p-5 hover:border-accent transition-colors block"
+          >
+            <h2 className="font-semibold">GitHub issue</h2>
+            <span className="text-accent text-sm mt-2 inline-block">
+              github.com/fuzmaster/framebar-site/issues
+            </span>
             <p className="text-xs text-text-faint mt-2">
-              File issues and feature requests in the repo.
+              Best for repeatable bugs and feature requests.
             </p>
-          </div>
+          </a>
+
+          <a
+            href={AUTHOR.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="panel p-5 hover:border-accent transition-colors block"
+          >
+            <h2 className="font-semibold">Portfolio</h2>
+            <span className="text-accent text-sm mt-2 inline-block">
+              {AUTHOR.url.replace("https://", "")}
+            </span>
+            <p className="text-xs text-text-faint mt-2">Other work by {AUTHOR.name}.</p>
+          </a>
         </div>
 
         <p className="text-sm text-text-faint mt-10">
-          A direct contact form will be added before paid plans launch.
+          A direct in-page contact form will arrive before paid plans launch.
         </p>
       </main>
       <BackLinkFooter />
